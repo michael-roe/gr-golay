@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(golay_encoder_bb.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(52d26f1a21aefd9d2ac3c582be1d938c)                     */
+/* BINDTOOL_HEADER_FILE_HASH(91f907d367b240052c32a5843a9e9d7d)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -30,7 +30,7 @@ namespace py = pybind11;
 void bind_golay_encoder_bb(py::module& m)
 {
 
-    using golay_encoder_bb    = gr::golay::golay_encoder_bb;
+    using golay_encoder_bb    = ::gr::golay::golay_encoder_bb;
 
 
     py::class_<golay_encoder_bb, gr::sync_interpolator,

@@ -15,8 +15,17 @@ namespace gr {
 namespace golay {
 
 /*!
- * \brief <+description of block+>
+ * \brief Encode bits using the extended binary Golay code
  * \ingroup golay
+ * \details
+ * For each twelve bits of input, the output is the 12 input bits followed by
+ * 12 bits of error correction.
+ * 
+ * The error correction bits are formed by regarding the input bits as a
+ * polynomial over GF(2), multiplying it by x**11 and taking the remainder after
+ * division by x**11+x**9+x**7+x**6+x**5+x+1. The error correction bits are the
+ * coefficients of the remainder followed by a parity bit to give the 24 bit
+ * output block even parity.
  *
  */
 class GOLAY_API golay_encoder_bb : virtual public gr::sync_interpolator
