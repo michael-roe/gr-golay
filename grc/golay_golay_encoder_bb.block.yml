@@ -1,0 +1,15 @@
+id: c4fm_golay_encoder_bb
+label: Golay Encoder
+category: '[Golay]'
+templates:
+  imports: import golay
+  make: golay.golay_encoder_bb()
+inputs:
+- label: in
+  domain: stream
+  dtype: byte
+outputs:
+- label: out
+  domain: stream
+  dtype: byte
+file_format: 1
