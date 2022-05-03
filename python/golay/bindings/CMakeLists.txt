@@ -29,7 +29,8 @@ include(GrPybind)
 ########################################################################
 
 list(APPEND golay_python_files
-    golay_encoder_bb_python.cc python_bindings.cc)
+    golay_encoder_bb_python.cc
+    golay_decoder_bb_python.cc python_bindings.cc)
 
 GR_PYBIND_MAKE_OOT(golay
    ../../..

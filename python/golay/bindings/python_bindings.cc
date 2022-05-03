@@ -22,6 +22,7 @@ namespace py = pybind11;
 /**************************************/
 // BINDING_FUNCTION_PROTOTYPES(
     void bind_golay_encoder_bb(py::module& m);
+    void bind_golay_decoder_bb(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -51,5 +52,6 @@ PYBIND11_MODULE(golay_python, m)
     /**************************************/
     // BINDING_FUNCTION_CALLS(
     bind_golay_encoder_bb(m);
+    bind_golay_decoder_bb(m);
     // ) END BINDING_FUNCTION_CALLS
 }

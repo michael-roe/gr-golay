@@ -7,5 +7,6 @@
 #
 
 install(FILES
-    golay_golay_encoder_bb.block.yml DESTINATION share/gnuradio/grc/blocks
+    golay_golay_encoder_bb.block.yml
+    golay_golay_decoder_bb.block.yml DESTINATION share/gnuradio/grc/blocks
 )

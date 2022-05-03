@@ -11,5 +11,6 @@
 ########################################################################
 install(FILES
     api.h
-    golay_encoder_bb.h DESTINATION include/gnuradio/golay
+    golay_encoder_bb.h
+    golay_decoder_bb.h DESTINATION include/gnuradio/golay
 )

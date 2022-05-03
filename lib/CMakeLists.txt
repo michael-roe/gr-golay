@@ -13,6 +13,7 @@ include(GrPlatform) #define LIB_SUFFIX
 
 list(APPEND golay_sources
     golay_encoder_bb_impl.cc
+    golay_decoder_bb_impl.cc
 )
 
 set(golay_sources "${golay_sources}" PARENT_SCOPE)
