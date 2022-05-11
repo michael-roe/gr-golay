@@ -7,6 +7,7 @@
 
 #include "golay_decoder_bb_impl.h"
 #include <gnuradio/io_signature.h>
+#include <volk/volk.h>
 
 namespace gr {
 namespace golay {
@@ -32,6 +33,21 @@ golay_decoder_bb_impl::golay_decoder_bb_impl()
  */
 golay_decoder_bb_impl::~golay_decoder_bb_impl() {}
 
+static int onebit[12] = {
+  3189,
+  1595,
+  3944,
+  1972,
+  986,
+  3481,
+  1741,
+  871,
+  3526,
+  2711,
+  2366,
+  2283
+};
+
 int golay_decoder_bb_impl::work(int noutput_items,
                                 gr_vector_const_void_star &input_items,
                                 gr_vector_void_star &output_items)
@@ -40,12 +56,81 @@ int golay_decoder_bb_impl::work(int noutput_items,
   char *out = (char *)output_items[0];
   int i;
   int j;
+  int k;
+  int parity;
+  unsigned int s;
+  unsigned int w1;
+  unsigned int bits;
+
+  w1 = 1 | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 6) | (1 << 10) | (1 << 11);
 
   for (i=0; i<noutput_items/12; i++)
   {
-    for (j=0; j<12; j++)
+    parity = 0;
+    s = 0;
+    for (j=11; j>=0; j--)
     {
+      parity ^= in[24*i + j] & 0x1;
+      s ^= (in[24*i + j] & 0x1);
+      if (s & 0x1)
+      {
+        s ^= w1;
+      }
+      s = s >> 1;
       out[12*i + j] = in[24*i + j];
+    }
+    for (j=12; j<23; j++)
+    {
+      if (s & (1 << (22 - j)))
+      {
+        parity ^= 1;
+      }
+      if (in[24*i+j] & 0x01)
+      {
+        s ^= (1 << (22 - j));
+      }
+    }
+    parity ^= in[24*i+23] & 0x1;
+    s = (s << 1) | parity;
+    if (s == 0)
+    {
+      /* no errors, nothing to do */
+    }
+    else
+    {
+      volk_32u_popcnt(&bits, s);
+      if (bits <= 3)
+      {
+        /* errors only in the check bits, nothing to do */
+#if 0
+        printf("s = %4d, %d bits ", s, bits);
+	for (j=0; j<12; j++)
+	{
+	  printf("%d", in[24*i + j + 12]);
+	}
+	printf("\n");
+#endif
+      }
+      else
+      {
+        for (j=0; j<12; j++)
+	{
+          volk_32u_popcnt(&bits, s^onebit[j]);
+	  if (bits <= 2)
+	  {
+	    out[12*i + j] ^= 0x1;
+#if 0
+	    printf("s = %4d, %d bits, j = %d ", s, bits, j);
+	    for (k=0; k<12; k++)
+	    {
+	      printf("%d", out[12*i + k]);
+            }
+	    printf("\n");
+#endif
+	    break;
+	  }
+	}
+      }
     }
   }
 
