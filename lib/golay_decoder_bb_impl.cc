@@ -179,11 +179,32 @@ int golay_decoder_bb_impl::work(int noutput_items,
 	  }
 	  else
           {
-#if 0
-	    for (j=0; j<24; j++)
-	      printf("%d ", in[i*24 + j]);
-	    printf("\n");
-#endif
+	    found = 0;
+	    for (j=0; j<12; j++)
+	    {
+	      volk_32u_popcnt(&bits, t^transpose[j]);
+	      if (bits <= 2)
+	      {
+	        found = 1;
+	        t ^= transpose[j];
+		for (k=0; k<12; k++)
+		{
+	          if (t & (1 << (11 - k)))
+	          {
+	            out[12*i + k] ^= 0x1;
+		  }
+	        }
+	        
+	        for (k=0; k<12; k++)
+	          printf("%d ", out[i*12 + k]);
+                printf("bits = %d t = %d\n", bits, t);
+		break;
+              }
+	    }
+	    if (found == 0)
+	    {
+              printf("uncorrectable error\n");
+	    }
           }
         }
       }
