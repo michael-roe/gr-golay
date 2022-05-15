@@ -48,6 +48,21 @@ static int onebit[12] = {
   2283
 };
 
+static int transpose[12] = {
+  2639,
+  3944,
+  1972,
+  986,
+  493,
+  2745,
+  3859,
+  3526,
+  1763,
+  2366,
+  1183,
+  3189
+};
+
 int golay_decoder_bb_impl::work(int noutput_items,
                                 gr_vector_const_void_star &input_items,
                                 gr_vector_void_star &output_items)
@@ -58,7 +73,9 @@ int golay_decoder_bb_impl::work(int noutput_items,
   int j;
   int k;
   int parity;
+  int found;
   unsigned int s;
+  unsigned int t;
   unsigned int w1;
   unsigned int bits;
 
@@ -113,12 +130,14 @@ int golay_decoder_bb_impl::work(int noutput_items,
       }
       else
       {
+        found = 0;
         for (j=0; j<12; j++)
 	{
           volk_32u_popcnt(&bits, s^onebit[j]);
 	  if (bits <= 2)
 	  {
 	    out[12*i + j] ^= 0x1;
+	    found = 1;
 #if 0
 	    printf("s = %4d, %d bits, j = %d ", s, bits, j);
 	    for (k=0; k<12; k++)
@@ -130,6 +149,43 @@ int golay_decoder_bb_impl::work(int noutput_items,
 	    break;
 	  }
 	}
+	if (found == 0)
+	{
+          t = 0;
+	  for (j=0; j<12; j++)
+          {
+            if (in[i*24 + j + 12])
+	    {
+	      t ^= transpose[j];
+	    }
+          }
+	  for (j=0; j<12; j++)
+	  {
+            if (in[i*24 + j])
+	    {
+              t ^= 1 << (11 - j);
+	    }
+          }
+	  volk_32u_popcnt(&bits, t);
+	  if (bits <= 3)
+	  {
+	    for (j=0; j<12; j++)
+	    {
+	      if (t & (1 << (11 - j)))
+	      {
+	        out[12*i + j] ^= 0x1;
+	      }
+	    }
+	  }
+	  else
+          {
+#if 0
+	    for (j=0; j<24; j++)
+	      printf("%d ", in[i*24 + j]);
+	    printf("\n");
+#endif
+          }
+        }
       }
     }
   }
