@@ -15,7 +15,8 @@ namespace golay {
 
 class golay_decoder_bb_impl : public golay_decoder_bb {
 private:
-  // Nothing to declare in this block.
+  unsigned long long d_offset;
+  pmt::pmt_t d_parity_error_key;
 
 public:
   golay_decoder_bb_impl();

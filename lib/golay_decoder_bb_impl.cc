@@ -26,6 +26,8 @@ golay_decoder_bb_impl::golay_decoder_bb_impl()
           gr::io_signature::make(1, 1, sizeof(char)), 2)
 {
   set_output_multiple(12);
+  d_offset = 0;
+  d_parity_error_key = pmt::string_to_symbol("parity_error");
 }
 
 /*
@@ -203,13 +205,15 @@ int golay_decoder_bb_impl::work(int noutput_items,
 	    }
 	    if (found == 0)
 	    {
-              printf("uncorrectable error\n");
+              add_item_tag(0, d_offset+12*i, d_parity_error_key, pmt::PMT_T);
 	    }
           }
         }
       }
     }
   }
+
+  d_offset += noutput_items;
 
   // Tell runtime system how many output items we produced.
   return noutput_items;
