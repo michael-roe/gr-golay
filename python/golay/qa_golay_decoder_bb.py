@@ -7,7 +7,8 @@
 #
 
 from gnuradio import gr, gr_unittest
-# from gnuradio import blocks
+from gnuradio import blocks
+
 try:
   from gnuradio.golay import golay_decoder_bb
 except ImportError:
@@ -26,14 +27,18 @@ class qa_golay_decoder_bb(gr_unittest.TestCase):
         self.tb = None
 
     def test_instance(self):
-        # FIXME: Test will fail until you pass sensible arguments to the constructor
         instance = golay_decoder_bb()
 
     def test_001_descriptive_test_name(self):
-        # set up fg
-        self.tb.run()
-        # check data
-
+        src_data = (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1)
+        expected_result = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        src = blocks.vector_source_b(src_data)
+        golay = golay_decoder_bb()
+        dst = blocks.vector_sink_b()
+        self.tb.connect(src, golay, dst)
+        self.tb.run ()
+        result_data = dst.data()
+        self.assertEqual(result_data, expected_result)
 
 if __name__ == '__main__':
     gr_unittest.run(qa_golay_decoder_bb)
