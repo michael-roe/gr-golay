@@ -29,8 +29,31 @@ class qa_golay_decoder_bb(gr_unittest.TestCase):
     def test_instance(self):
         instance = golay_decoder_bb()
 
-    def test_001_descriptive_test_name(self):
+    def test_001_zero_errors(self):
         src_data = (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1)
+        expected_result = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        src = blocks.vector_source_b(src_data)
+        golay = golay_decoder_bb()
+        dst = blocks.vector_sink_b()
+        self.tb.connect(src, golay, dst)
+        self.tb.run ()
+        result_data = dst.data()
+        self.assertEqual(result_data, expected_result)
+
+    def test_002_zero_errors_in_data(self):
+        src_data = (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1)
+        expected_result = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        src = blocks.vector_source_b(src_data)
+        golay = golay_decoder_bb()
+        dst = blocks.vector_sink_b()
+        self.tb.connect(src, golay, dst)
+        self.tb.run ()
+        result_data = dst.data()
+        self.assertEqual(result_data, expected_result)
+
+    def test_003_one_error_in_data(self):
+        src_data = (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1)
+        src_data = (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1)
         expected_result = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         src = blocks.vector_source_b(src_data)
         golay = golay_decoder_bb()
