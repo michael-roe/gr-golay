@@ -121,14 +121,6 @@ int golay_decoder_bb_impl::work(int noutput_items,
       if (bits <= 3)
       {
         /* errors only in the check bits, nothing to do */
-#if 0
-        printf("s = %4d, %d bits ", s, bits);
-	for (j=0; j<12; j++)
-	{
-	  printf("%d", in[24*i + j + 12]);
-	}
-	printf("\n");
-#endif
       }
       else
       {
@@ -140,14 +132,6 @@ int golay_decoder_bb_impl::work(int noutput_items,
 	  {
 	    out[12*i + j] ^= 0x1;
 	    found = 1;
-#if 0
-	    printf("s = %4d, %d bits, j = %d ", s, bits, j);
-	    for (k=0; k<12; k++)
-	    {
-	      printf("%d", out[12*i + k]);
-            }
-	    printf("\n");
-#endif
 	    break;
 	  }
 	}
@@ -197,9 +181,6 @@ int golay_decoder_bb_impl::work(int noutput_items,
 		  }
 	        }
 	        
-	        for (k=0; k<12; k++)
-	          printf("%d ", out[i*12 + k]);
-                printf("bits = %d t = %d\n", bits, t);
 		break;
               }
 	    }
