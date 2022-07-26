@@ -133,7 +133,7 @@ int golay_decoder_bb_impl::work(int noutput_items,
                                 break;
                             }
                         }
-                        if (found == 0) {
+                        if ((found == 0) && d_parity_error_key) {
                             add_item_tag(
                                 0, d_offset + 12 * i, d_parity_error_key, pmt::PMT_T);
                         }
